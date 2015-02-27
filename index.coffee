@@ -7,8 +7,9 @@ RESERVED = [ 'start', 'create', 'set', 'delete', 'foreach', 'match', 'where', 'w
              'scan', 'remove', 'union' ]
 INVALID_IDEN = /\W/
 
-QUERY_PARTS = [ 'start', 'match', 'where', 'with', 'set', 'delete', 'forach', 'return'
-                'union', 'union all', 'order by', 'limit', 'skip', 'create', 'merge' ]
+QUERY_PARTS = [ 'start', 'match', 'create', 'merge', 'where', 'with', 'set', 'delete',
+                'forach', 'return', 'union', 'union all', 'order by', 'limit', 'skip',
+                'create', 'merge' ]
 class CypherQuery
   constructor: (opt) ->
     return new CypherQuery opt unless this?
