@@ -51,6 +51,7 @@
           joiner = key === 'where' ? ' AND ' : ', ';
           switch (key) {
             case 'merge':
+            case 'create':
               results.push(key.toLowerCase() + ' ' + val.join(joiner).replace(/\{(\w+)\}/g, (function(_this) {
                 return function(_, key) {
                   var _val;
