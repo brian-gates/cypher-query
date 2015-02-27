@@ -18,7 +18,7 @@
 
   INVALID_IDEN = /\W/;
 
-  QUERY_PARTS = ['start', 'match', 'create', 'merge', 'where', 'with', 'set', 'delete', 'forach', 'return', 'union', 'union all', 'order by', 'limit', 'skip', 'create', 'merge'];
+  QUERY_PARTS = ['start', 'match', 'create', 'merge', 'where', 'with', 'set', 'delete', 'forach', 'return', 'union', 'union all', 'order by', 'limit', 'skip'];
 
   CypherQuery = (function() {
     var escape, escape_identifier, i, k, len, part_builder;
