@@ -71,6 +71,11 @@ describe 'CypherQuery', ->
   it 'aliases return as ret', ->
     eq cypher::return, cypher::ret
 
+  describe 'merge', ->
+    it 'compiles params directly', ->
+      query = cypher().merge('(node {params})').params({params: {foo: 'bar'}}).compile()
+      eq query, "merge (node {'foo':'bar'})"
+
   describe '::compile(with_params)', ->
     it 'delegates to toString() when with_params=false', ->
       eq cypher().start('a').compile(), "START a"

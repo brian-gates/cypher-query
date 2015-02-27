@@ -20,7 +20,13 @@ class CypherQuery
   toString: ->
     (for key in QUERY_PARTS when (val = @_query[key])?
       joiner = if key is 'where' then ' AND ' else ', '
-      key.toUpperCase() + ' ' + val.join joiner
+      switch key
+        when 'merge'
+          key.toLowerCase() + ' ' + val.join(joiner).replace /\{(\w+)\}/g, (_, key) =>
+            _val = escape JSON.stringify(@_params[key]).replace(/"/g, "'") or throw new Error "Missing: #{key}"
+            _val[1.._val.length-2]
+        else
+          key.toUpperCase() + ' ' + val.join joiner
     ).join "\n"
 
   execute: (db, cb) -> db.query @toString(), @_params, cb
