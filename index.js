@@ -18,7 +18,7 @@
 
   INVALID_IDEN = /\W/;
 
-  QUERY_PARTS = ['start', 'match', 'create', 'merge', 'where', 'with', 'set', 'delete', 'forach', 'return', 'union', 'union all', 'order by', 'limit', 'skip'];
+  QUERY_PARTS = ['start', 'match', 'where', 'create', 'merge', 'with', 'set', 'delete', 'forach', 'return', 'union', 'union all', 'order by', 'limit', 'skip'];
 
   CypherQuery = (function() {
     var escape, escape_identifier, i, k, len, part_builder;
@@ -48,7 +48,18 @@
           if (!((val = this._query[key]) != null)) {
             continue;
           }
-          joiner = key === 'where' ? ' AND ' : ', ';
+          joiner = (function() {
+            switch (key) {
+              case 'where':
+                return ' AND ';
+              case 'merge':
+                return ' merge ';
+              case 'create':
+                return ' create ';
+              default:
+                return ', ';
+            }
+          })();
           switch (key) {
             case 'merge':
             case 'create':

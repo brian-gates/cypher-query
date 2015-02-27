@@ -7,7 +7,7 @@ RESERVED = [ 'start', 'create', 'set', 'delete', 'foreach', 'match', 'where', 'w
              'scan', 'remove', 'union' ]
 INVALID_IDEN = /\W/
 
-QUERY_PARTS = [ 'start', 'match', 'create', 'merge', 'where', 'with', 'set', 'delete',
+QUERY_PARTS = [ 'start', 'match', 'where', 'create', 'merge', 'with', 'set', 'delete',
                 'forach', 'return', 'union', 'union all', 'order by', 'limit', 'skip']
 class CypherQuery
   constructor: (opt) ->
@@ -19,7 +19,16 @@ class CypherQuery
 
   toString: ->
     (for key in QUERY_PARTS when (val = @_query[key])?
-      joiner = if key is 'where' then ' AND ' else ', '
+      joiner = switch key
+        when 'where'
+          ' AND '
+        when 'merge'
+          ' merge '
+        when 'create'
+          ' create '
+        else
+          ', '
+
       switch key
         when 'merge', 'create'
           key.toLowerCase() + ' ' + val.join(joiner).replace /\{(\w+)\}/g, (_, key) =>
