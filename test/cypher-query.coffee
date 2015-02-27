@@ -74,7 +74,7 @@ describe 'CypherQuery', ->
   describe 'merge', ->
     it 'compiles params directly', ->
       query = cypher().merge('(node {params})').params({params: {foo: 'bar'}}).compile()
-      eq query, "merge (node {'foo':'bar'})"
+      eq query, "merge (node {`foo`:'bar'})"
 
   describe '::compile(with_params)', ->
     it 'delegates to toString() when with_params=false', ->

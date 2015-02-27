@@ -57,7 +57,9 @@
                   _val = escape(JSON.stringify(_this._params[key]).replace(/"/g, "'") || (function() {
                     throw new Error("Missing: " + key);
                   })());
-                  return _val.slice(1, +(_val.length - 2) + 1 || 9e9);
+                  return _val.slice(1, +(_val.length - 2) + 1 || 9e9).replace(/'([\w_]+)':/g, function(_, key) {
+                    return "`" + key + "`:";
+                  });
                 };
               })(this)));
               break;
