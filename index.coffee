@@ -1,13 +1,13 @@
 "use strict"
 extend = (target, source) -> target[k]=v for k, v of source; target
 
-RESERVED = [ 'start', 'create', 'set', 'delete', 'foreach', 'match', 'where', 'with'
+RESERVED = [ 'start', 'create', 'set', 'delete', 'foreach', 'match', 'optionalMatch', 'where', 'with'
              'return', 'skip', 'limit', 'order', 'by', 'asc', 'desc', 'on', 'when',
              'case', 'then', 'else', 'drop', 'using', 'merge', 'constraint', 'assert'
              'scan', 'remove', 'union' ]
 INVALID_IDEN = /\W/
 
-QUERY_PARTS = [ 'start', 'match', 'where', 'create', 'merge', 'with', 'set', 'delete',
+QUERY_PARTS = [ 'start', 'match', 'optionalMatch', 'where', 'create', 'merge', 'with', 'set', 'delete',
                 'forach', 'return', 'union', 'union all', 'order by', 'limit', 'skip']
 class CypherQuery
   constructor: (opt) ->
@@ -23,17 +23,21 @@ class CypherQuery
         when 'where'
           ' AND '
         when 'merge'
-          ' merge '
+          ' MERGE '
+        when 'optionalMatch'
+          ' OPTIONAL MATCH '
         when 'create'
-          ' create '
+          ' CREATE '
         else
           ', '
 
       switch key
         when 'merge', 'create'
-          key.toLowerCase() + ' ' + val.join(joiner).replace /\{(\w+)\}/g, (_, key) =>
+          key.toUpperCase() + ' ' + val.join(joiner).replace /\{(\w+)\}/g, (_, key) =>
             _val = escape JSON.stringify(@_params[key]).replace(/"/g, "'") or throw new Error "Missing: #{key}"
             _val[1.._val.length-2].replace(/'([\w_]+)':/g, (_, key) => "`#{key}`:" )
+        when 'optionalMatch'
+          'OPTIONAL MATCH '+val.join joiner
         else
           key.toUpperCase() + ' ' + val.join joiner
     ).join "\n"

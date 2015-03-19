@@ -7,13 +7,19 @@ describe 'CypherQuery', ->
       .start('n=node(1)')
       .where('foo=1', 'bar=2')
       .match('n-->m', 'x<--n')
+      .optionalMatch('o-->p')
+      .create('(createMe)')
+      .merge('mergeThis-->mergeThat')
       .return('n')
       .return('m', 'x')
       .toString(),
     """
       START n=node(1)
       MATCH n-->m, x<--n
+      OPTIONAL MATCH o-->p
       WHERE foo=1 AND bar=2
+      CREATE (createMe)
+      MERGE mergeThis-->mergeThat
       RETURN n, m, x
     """
   it 'uses the correct order', ->
@@ -30,7 +36,7 @@ describe 'CypherQuery', ->
       match: [ 'b', 'c' ]
       params: { d: 4 }
     ).where('d')
-    
+
     eq query.toString(),
       """
       START a
@@ -74,7 +80,7 @@ describe 'CypherQuery', ->
   describe 'merge', ->
     it 'compiles params directly', ->
       query = cypher().merge('(node {params})').params({params: {foo: 'bar'}}).compile()
-      eq query, "merge (node {`foo`:'bar'})"
+      eq query, "MERGE (node {`foo`:'bar'})"
 
   describe '::compile(with_params)', ->
     it 'delegates to toString() when with_params=false', ->
@@ -94,7 +100,7 @@ describe 'CypherQuery', ->
 
     it 'escapes reserved names', ->
       eq '`where`', escape_identifier 'where'
-    
+
     it 'leaves valid identifiers as-is', ->
       eq 'hello', escape_identifier 'hello'
 
