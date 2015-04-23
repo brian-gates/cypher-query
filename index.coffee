@@ -32,10 +32,12 @@ class CypherQuery
           ', '
 
       switch key
-        when 'merge', 'create', 'order by'
+        when 'merge', 'create'
           key.toLowerCase() + ' ' + val.join(joiner).replace /\{(\w+)\}/g, (_, key) =>
             _val = escape JSON.stringify(@_params[key]).replace(/"/g, "'") or throw new Error "Missing: #{key}"
             _val[1.._val.length-2].replace(/'([\w_]+)':/g, (_, key) => "`#{key}`:" )
+        when 'order by'
+          'ORDER BY ' + val.join(joiner).replace(/\{(\w+)\}/g, (_, key) => escape @_params[key])
         when 'optionalMatch'
           'OPTIONAL MATCH '+val.join joiner
         else
