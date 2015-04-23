@@ -30,7 +30,7 @@ class CypherQuery
           ', '
 
       switch key
-        when 'merge', 'create'
+        when 'merge', 'create', 'order by'
           key.toLowerCase() + ' ' + val.join(joiner).replace /\{(\w+)\}/g, (_, key) =>
             _val = escape JSON.stringify(@_params[key]).replace(/"/g, "'") or throw new Error "Missing: #{key}"
             _val[1.._val.length-2].replace(/'([\w_]+)':/g, (_, key) => "`#{key}`:" )

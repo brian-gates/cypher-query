@@ -63,6 +63,7 @@
           switch (key) {
             case 'merge':
             case 'create':
+            case 'order by':
               results.push(key.toLowerCase() + ' ' + val.join(joiner).replace(/\{(\w+)\}/g, (function(_this) {
                 return function(_, key) {
                   var _val;
