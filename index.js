@@ -65,7 +65,7 @@
           switch (key) {
             case 'merge':
             case 'create':
-              results.push(key.toLowerCase() + ' ' + val.join(joiner).replace(/\{(\w+)\}/g, (function(_this) {
+              results.push(key.toUpperCase() + ' ' + val.join(joiner).replace(/\{(\w+)\}/g, (function(_this) {
                 return function(_, key) {
                   var _val;
                   _val = escape(JSON.stringify(_this._params[key]).replace(/"/g, "'") || (function() {
@@ -74,13 +74,6 @@
                   return _val.slice(1, +(_val.length - 2) + 1 || 9e9).replace(/'([\w_]+)':/g, function(_, key) {
                     return "`" + key + "`:";
                   });
-                };
-              })(this)));
-              break;
-            case 'order by':
-              results.push('ORDER BY ' + val.join(joiner).replace(/\{(\w+)\}/g, (function(_this) {
-                return function(_, key) {
-                  return escape(_this._params[key].slice(1, _this._params[key].length - 1));
                 };
               })(this)));
               break;
