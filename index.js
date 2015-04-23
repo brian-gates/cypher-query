@@ -14,11 +14,11 @@
     return target;
   };
 
-  RESERVED = ['start', 'create', 'set', 'delete', 'foreach', 'match', 'where', 'with', 'return', 'skip', 'limit', 'order', 'by', 'asc', 'desc', 'on', 'when', 'case', 'then', 'else', 'drop', 'using', 'merge', 'constraint', 'assert', 'scan', 'remove', 'union'];
+  RESERVED = ['start', 'create', 'set', 'delete', 'foreach', 'match', 'optionalMatch', 'where', 'with', 'return', 'skip', 'limit', 'order', 'by', 'asc', 'desc', 'on', 'when', 'case', 'then', 'else', 'drop', 'using', 'merge', 'constraint', 'assert', 'scan', 'remove', 'union'];
 
   INVALID_IDEN = /\W/;
 
-  QUERY_PARTS = ['start', 'match', 'where', 'create', 'merge', 'with', 'set', 'delete', 'forach', 'return', 'union', 'union all', 'order by', 'limit', 'skip'];
+  QUERY_PARTS = ['start', 'match', 'optionalMatch', 'where', 'create', 'merge', 'with', 'set', 'delete', 'forach', 'return', 'union', 'union all', 'order by', 'limit', 'skip'];
 
   CypherQuery = (function() {
     var escape, escape_identifier, i, k, len, part_builder;
@@ -53,9 +53,11 @@
               case 'where':
                 return ' AND ';
               case 'merge':
-                return ' merge ';
+                return ' MERGE ';
+              case 'optionalMatch':
+                return ' OPTIONAL MATCH ';
               case 'create':
-                return ' create ';
+                return ' CREATE ';
               default:
                 return ', ';
             }
@@ -75,6 +77,9 @@
                   });
                 };
               })(this)));
+              break;
+            case 'optionalMatch':
+              results.push('OPTIONAL MATCH ' + val.join(joiner));
               break;
             default:
               results.push(key.toUpperCase() + ' ' + val.join(joiner));
