@@ -80,7 +80,7 @@
             case 'order by':
               results.push('ORDER BY ' + val.join(joiner).replace(/\{(\w+)\}/g, (function(_this) {
                 return function(_, key) {
-                  return escape(_this._params[key]);
+                  return escape(_this._params[key].slice(1, _this._params[key].length - 1));
                 };
               })(this)));
               break;
